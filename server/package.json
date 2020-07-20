@@ -1,0 +1,36 @@
+{
+  "name": "startier",
+  "version": "1.0.0",
+  "description": "A webapp which focus on providing a great platform to students where they can learn, compete and grow  together",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Priyankcoder/STARTIER.git"
+  },
+  "keywords": [
+    "Webapp",
+    "learning",
+    "growing",
+    "competing",
+    "platform"
+  ],
+  "author": "Priyank Rastogi and Sushant Gupta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Priyankcoder/STARTIER/issues"
+  },
+  "homepage": "https://github.com/Priyankcoder/STARTIER#readme",
+  "dependencies": {
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "http-status-codes": "^1.4.0",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.25",
+    "nodemon": "^2.0.4",
+    "passport": "^0.4.1"
+  }
+}
