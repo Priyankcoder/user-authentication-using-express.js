@@ -1,6 +1,5 @@
 const mongoose = require("mongoose"),
 passportLocalMongoose = require("passport-local-mongoose"),
-bcrypt = require("bcrypt"),
 passport = require("passport"),
 userSchema = mongoose.Schema(
   {
