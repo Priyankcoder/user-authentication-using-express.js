@@ -9,6 +9,7 @@ const express = require("express"),
   expressSession = require("express-session"),
   cookieParser = require("cookie-parser"),
   connectFlash = require("connect-flash"),
+  path = require("path"),
   expressValidator = require("express-validator"),
   passport = require("passport"),
   errorController = require("./controllers/errorController"),
@@ -16,7 +17,8 @@ const express = require("express"),
   // subscribersController = require("./controllers/subscribersController"),
   usersController = require("./controllers/usersController"),
   // coursesController = require("./controllers/coursesController"),
-  User = require("./models/user");
+  User = require("./models/user"),
+  Token = require("./models/token")
 
 mongoose.Promise = global.Promise;
 
@@ -34,7 +36,7 @@ db.once("open", () => {
 app.set("port", process.env.PORT || 3000);
 app.set("view engine", "ejs");
 
-router.use(express.static("public"));
+router.use(express.static(path.join(__dirname,"public")));
 router.use(layouts);
 router.use(
   express.urlencoded({
@@ -79,8 +81,20 @@ router.get("/", homeController.sendHome);
 router.get("/register", usersController.new); 
 router.post("/user/create", usersController.validate, usersController.create, usersController.redirectView); 
 router.get("/login", usersController.login); 
-router.post("/login", usersController.authenticate, usersController.redirectView); // app.get("/:name", homeController.sendProfile); app.get("/user", usersController.index, usersController.indexView) //Middlewares
-router.get("/user/:user", usersController.userFeed);
+router.post("/login", usersController.authenticate); // app.get("/:name", homeController.sendProfile); app.get("/user", usersController.index, usersController.indexView) //Middlewares
+router.get("/feed", usersController.userFeed);
+// router.get("/user/verification", (req, res)=>{
+//   res
+//     .status(200)
+//     .send("A verification email has been sent to " + user.email + ".");
+// })
+
+router.get("/confirmation/:token", usersController.confirmationPost);
+// app.post("/resend", usersController.resendTokenPost);
+router.post("/resendToken", usersController.resendToken);
+
+
+
 router.use(errorController.logErrors);
 router.use(errorController.respondNoResourceFound);
 router.use(errorController.respondInternalError);

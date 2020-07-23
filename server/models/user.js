@@ -1,6 +1,8 @@
-const mongoose = require("mongoose");
-const passportLocalMongoose = require("passport-local-mongoose");
-const userSchema = mongoose.Schema(
+const mongoose = require("mongoose"),
+passportLocalMongoose = require("passport-local-mongoose"),
+bcrypt = require("bcrypt"),
+passport = require("passport"),
+userSchema = mongoose.Schema(
   {
     name: {
       first: {
@@ -19,6 +21,7 @@ const userSchema = mongoose.Schema(
       lowercase: true,
       unique: true,
     },
+    isVerified: { type: Boolean, default: false },
   },
   {
     timestamps: true,
