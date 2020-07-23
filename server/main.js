@@ -19,7 +19,8 @@ const express = require("express"),
   // coursesController = require("./controllers/coursesController"),
   User = require("./models/user"),
   Token = require("./models/token"),
-  auth = require("./controllers/googleOauth"),
+  googleOauth = require("./controllers/googleOauth"),
+  githubOauth = require("./controllers/githubOauth"),
   GoogleStrategy = require("passport-google-oauth2").Strategy;
   // auth = require("./controllers/googleOauth")
 mongoose.Promise = global.Promise;
@@ -59,7 +60,9 @@ router.use(
     saveUninitialized: false,
   })
 );
-auth(passport);
+googleOauth(passport);
+githubOauth(passport);
+
 router.use(connectFlash());
 router.use(passport.initialize());
 router.use(passport.session());
@@ -105,6 +108,20 @@ router.get(
     successRedirect: "/feed",
     failureRedirect: "/",
   })
+);
+
+router.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get(
+  "/auth/github/callback",
+  passport.authenticate("github", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/feed");
+  }
 );
 
 
