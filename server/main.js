@@ -18,12 +18,15 @@ const express = require("express"),
   usersController = require("./controllers/usersController"),
   // coursesController = require("./controllers/coursesController"),
   User = require("./models/user"),
-  Token = require("./models/token")
-
+  Token = require("./models/token"),
+  auth = require("./controllers/googleOauth"),
+  GoogleStrategy = require("passport-google-oauth2").Strategy;
+  // auth = require("./controllers/googleOauth")
 mongoose.Promise = global.Promise;
 
 mongoose.connect("mongodb://localhost:27017/recipe_db", {
-  useNewUrlParser: true, useUnifiedTopology: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 mongoose.set("useCreateIndex", true);
 
@@ -36,20 +39,14 @@ db.once("open", () => {
 app.set("port", process.env.PORT || 3000);
 app.set("view engine", "ejs");
 
-router.use(express.static(path.join(__dirname,"public")));
+router.use(express.static(path.join(__dirname, "public")));
 router.use(layouts);
+router.use(expressValidator());
 router.use(
   express.urlencoded({
     extended: false,
   })
 );
-
-// router.use(
-//   methodOverride("_method", {
-//     methods: ["POST", "GET"],
-//   })
-// );
-
 router.use(express.json());
 router.use(cookieParser("secret_passcode"));
 router.use(
@@ -62,19 +59,19 @@ router.use(
     saveUninitialized: false,
   })
 );
-
+auth(passport);
+router.use(connectFlash());
 router.use(passport.initialize());
 router.use(passport.session());
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
-router.use(connectFlash());
 
 router.use((req, res, next) => {
+  res.locals.currentUser = req.user;
   res.locals.flashMessages = req.flash();
   next();
 });
-router.use(expressValidator());
 // router.use(homeController.logRequestPaths);
 
 router.get("/", homeController.sendHome);
@@ -92,6 +89,23 @@ router.get("/feed", usersController.userFeed);
 router.get("/confirmation/:token", usersController.confirmationPost);
 // app.post("/resend", usersController.resendTokenPost);
 router.post("/resendToken", usersController.resendToken);
+router.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email'
+    ],
+  })
+);
+
+router.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "/feed",
+    failureRedirect: "/",
+  })
+);
 
 
 
