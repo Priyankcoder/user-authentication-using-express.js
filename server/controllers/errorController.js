@@ -1,26 +1,23 @@
-"use strict";
+'use strict'
 
-const httpStatus = require("http-status-codes");
-const path = require("path")
-
+const httpStatus = require('http-status-codes')
+const path = require('path')
 
 exports.logErrors = (error, req, res, next) => {
-  console.error(error.stack);
-  next(error);
-};
+  console.error(error.stack)
+  next(error)
+}
 
 exports.respondNoResourceFound = (req, res) => {
-  let errorCode = httpStatus.NOT_FOUND;
-  res.status(errorCode);
+  const errorCode = httpStatus.NOT_FOUND
+  res.status(errorCode)
   // res.send(`${errorCode} | The page does not exist!`);
-  res.sendFile(path.join(__dirname, "../public/html/Er404.html"));
-
-
-};
+  res.sendFile(path.join(__dirname, '../public/html/Er404.html'))
+}
 
 exports.respondInternalError = (error, req, res, next) => {
-  let errorCode = httpStatus.INTERNAL_SERVER_ERROR;
-  console.log(`ERROR occurred: ${error.stack}`);
-  res.status(errorCode);
-  res.send(`${errorCode} | Sorry, our application is experiencing a problem!`);
-};
+  const errorCode = httpStatus.INTERNAL_SERVER_ERROR
+  console.log(`ERROR occurred: ${error.stack}`)
+  res.status(errorCode)
+  res.send(`${errorCode} | Sorry, our application is experiencing a problem!`)
+}
