@@ -22,6 +22,7 @@ const User = require('./models/user')
 const googleOauth = require('./controllers/googleOauth')
 const githubOauth = require('./controllers/githubOauth')
 const cors = require('cors')
+require('dotenv').config()
 // const GoogleStrategy = require('passport-google-oauth2').Strategy
 // auth = require("./controllers/googleOauth")
 mongoose.Promise = global.Promise

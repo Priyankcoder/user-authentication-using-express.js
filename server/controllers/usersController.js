@@ -166,9 +166,9 @@ module.exports = {
         const transporter = nodemailer.createTransport({
           service: 'SendGrid',
           auth: {
-            user: 'apikey',
-            pass:
-              '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'
+            user: process.env.sendGridUser,
+            pass: process.env.sendGridPassword
+
           }
         })
         const mailOptions = {
