@@ -21,6 +21,7 @@ const User = require('./models/user')
 // const Token = require('./models/token')
 const googleOauth = require('./controllers/googleOauth')
 const githubOauth = require('./controllers/githubOauth')
+const cors = require('cors')
 // const GoogleStrategy = require('passport-google-oauth2').Strategy
 // auth = require("./controllers/googleOauth")
 mongoose.Promise = global.Promise
@@ -40,6 +41,13 @@ db.once('open', () => {
 app.set('port', process.env.PORT || 3000)
 app.set('view engine', 'ejs')
 
+router.use(cors({
+  origin: 'http://localhost:3002'
+}))
+// router.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   next()
+// })
 router.use(express.static(path.join(__dirname, 'public')))
 router.use(layouts)
 router.use(expressValidator())
@@ -53,8 +61,11 @@ router.use(cookieParser('secret_passcode'))
 router.use(
   expressSession({
     secret: 'secret_passcode',
+    // name: 'priyank',
     cookie: {
-      maxAge: 4000000
+      maxAge: 4000000,
+      sameSite: false,
+      httpOnly: false
     },
     resave: false,
     saveUninitialized: false
@@ -118,6 +129,7 @@ router.get(
   (req, res) => {
     req.session.loggedIn = true
     res.redirect('/feed')
+    // res.status(200).send(req.session)
   }
 )
 
@@ -133,13 +145,13 @@ router.get(
     // Successful authentication, redirect home.
     req.session.loggedIn = true
     res.redirect('/feed')
+    // res.status(200).send(req.session)
   }
 )
 
 router.use(errorController.logErrors)
 router.use(errorController.respondNoResourceFound)
 router.use(errorController.respondInternalError)
-
 app.use('/', router)
 
 app.listen(app.get('port'), () => {

@@ -5,6 +5,7 @@ const Token = require('../models/token')
 const crypto = require('crypto')
 const passport = require('passport')
 const nodemailer = require('nodemailer')
+// const fetch = require('node-fetch')
 
 const getUserParams = (body) => {
   return {
@@ -95,9 +96,27 @@ module.exports = {
       }
     })
   },
+
   userFeed: (req, res) => {
     console.log(req.session)
-    res.render('feed')
+    // const url = 'https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty'
+
+    // const getData = async url => {
+    //   try {
+    //     const response = await fetch(url)
+    //     const json = await response.json()
+    //     console.log(json)
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+
+    // }
+
+    // getData(url)
+    // fetch(').then((response) => {
+    //   console.log(response.json())
+    // }).catch(err => console.log(err))
+    return res.render('feed')
   },
   redirectView: (req, res, next) => {
     const redirectPath = res.locals.redirect
@@ -112,7 +131,7 @@ module.exports = {
       .trim()
     req.check('email', 'Email is invalid').isEmail()
     // Check for validation errors
-    const errors = req.vuserFealidationErrors()
+    const errors = req.userValidationErrors()
     if (errors) return res.status(400).send(errors)
 
     User.findOne({ email: req.body.email }, function (err, user) {
